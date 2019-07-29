@@ -8,3 +8,7 @@ services:
         build: ./src/reverse.proxy
         ports:
             - "5002:80"
+  thermal_api:
+        build: ./src/thermal_api
+        environment:
+          - REDIS_HOST=ipc

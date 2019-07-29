@@ -1,0 +1,4 @@
+uppercut
+Flask
+flask_restful
+flask_cors

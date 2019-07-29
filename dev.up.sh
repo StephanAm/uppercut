@@ -1,1 +1,1 @@
-docker-compose -f dc.dev.yml up
+docker-compose -f ./dc.dev.yml up --build
