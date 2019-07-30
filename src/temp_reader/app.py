@@ -2,8 +2,8 @@ from uppercut.module import Module
 from time import time
 
 class TempReadModule(Module):
-    def mainloop(self):
-        temp = time % 60
+    def mainLoop(self):
+        temp = time() % 60
         self.VarStore.set('temperature',temp)
         print(self)
 
