@@ -3,14 +3,20 @@ from flask_restful import Resource, Api, reqparse
 from flask_cors import CORS
 import os
 import socket
-from uppercut import sharedvars
-from uppercut import environment
+import uppercut.sharedvars as sharedvars
+import uppercut.environment as environment
+
 getVar = environment.getVar
-SharedVars = sharedvars.SharedVars
 
 # Connect to Redis
 redishost = getVar('REDIS_HOST','localhost')
-redis = SharedVars('sousvide/thermo/', host=redishost, db=0, socket_connect_timeout=2, socket_timeout=2)
+TempControl = sharedvars.SharedVarStore('TempControl')
+
+class const(object):
+    temp='temperature'
+    isOn='isOn'
+    setTemp='setTemperature'
+    elementOn='elementOn'
 
 app = Flask(__name__)
 CORS(app)
@@ -19,44 +25,46 @@ api = Api(app)
 class SetPoint(Resource):
     def __init__(self):
         self.parser = reqparse.RequestParser()
-        self.parser.add_argument('setpoint',type=int,help='required temperature in degrees Celcius')
+        self.parser.add_argument(const.setTemp,type=int,help='required temperature in degrees Celcius')
     def get(self):
-        setpoint = redis.get('setpoint')
+        setpoint = TempControl.get(const.setTemp)
         return {
-            'setpoint':setpoint
+            const.setTemp:setpoint
             }
     def post(self):
         args = self.parser.parse_args()
-        setpoint = args['setpoint']
-        redis.set('setpoint',setpoint)
+        setpoint = args[const.setTemp]
+        TempControl.set(const.setTemp,setpoint)
         return {
-            'setpoint':setpoint
+            const.setTemp:setpoint
             }
 class Status(Resource):
     def get(self):
+
         result = {
-            'isOn': redis.get('ison'),
-            'elementOn':  redis.get('elementOn'),
-            'currentTemp':redis.get("currentTemp"),
-            'setPoint':redis.get('setpoint')
+            const.isOn: TempControl.get(const.isOn),
+            const.elementOn:  TempControl.get(const.elementOn),
+            const.temp:TempControl.get(const.temp),
+            const.setTemp:TempControl.get(const.setTemp)
             }
         return result
 
 class IsOn(Resource):
     def __init__(self):
         self.parser = reqparse.RequestParser()
-        self.parser.add_argument('isOn',type=bool,help='value indicates whether control should be switched on or off')
+        self.parser.add_argument(const.isOn,type=bool,help='value indicates whether control should be switched on or off')
     def get(self):
         return {
-            'isOn': redis.get('ison')
+            const.isOn: TempControl.get(const.isOn)
             }
     def post(self):
         args = self.parser.parse_args()
-        isOn = bool(args['isOn'])
-        redis.set('ison',isOn)
+        isOn = bool(args[const.isOn])
+        TempControl.set(const.isOn,isOn)
         return {
-            'isOn': isOn
+            const.isOn: isOn
             }
+            
 api.add_resource(SetPoint,'/setpoint')
 api.add_resource(Status,'/status')
 api.add_resource(IsOn,'/ison')

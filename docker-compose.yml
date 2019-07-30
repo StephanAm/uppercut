@@ -1,0 +1,21 @@
+version: '3'
+services:
+  ipc:
+    image: redis
+    ports: 
+      - "6379:6379"
+
+  reverse_proxy:
+        build: ./src/reverse.proxy
+        ports:
+            - "5002:80"
+
+  thermal_api:
+        build: ./src/thermal_api
+        environment:
+          - SHARED_VAR_HOST=ipc
+
+  temp_reader:
+        build: ./src/temp_reader
+        environment:
+          - SHARED_VAR_HOST=ipc
