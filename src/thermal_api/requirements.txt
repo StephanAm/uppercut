@@ -1,4 +1,4 @@
-uppercut>=0.1.10
+uppercut>=0.1.11
 Flask
 flask_restful
 flask_cors

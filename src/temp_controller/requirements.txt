@@ -1,1 +1,1 @@
-uppercut>=0.1.10
+uppercut>=0.1.11

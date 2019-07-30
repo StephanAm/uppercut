@@ -14,13 +14,19 @@ services:
         build: ./src/thermal_api
         environment:
           - SHARED_VAR_HOST=ipc
+        depends_on:
+          ipc
 
   temp_reader:
         build: ./src/temp_reader
         environment:
           - SHARED_VAR_HOST=ipc
+        depends_on:
+          ipc
 
   temp_contol:
         build: ./src/temp_controller
         environment:
           - SHARED_VAR_HOST=ipc
+        depends_on:
+          ipc

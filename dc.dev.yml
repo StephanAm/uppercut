@@ -12,3 +12,5 @@ services:
         build: ./src/thermal_api
         environment:
           - REDIS_HOST=ipc
+        depends_on:
+          ipc
