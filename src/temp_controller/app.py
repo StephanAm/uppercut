@@ -14,6 +14,8 @@ class TempControlModule(Module):
         setTemperature = self.VarStore.get('setTemperature')
         elementOn = self.getElementState(temperature,setTemperature,isOn)
         self.VarStore.set('elementOn',elementOn)
+        self.VarStore.set('temperature',temperature)
+        self.VarStore.set('setTemperature',setTemperature)
 
 tempControlModule = TempControlModule('TempControl',1)
 

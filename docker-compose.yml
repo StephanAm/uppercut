@@ -9,24 +9,26 @@ services:
         build: ./src/reverse_proxy
         ports:
             - "5002:80"
+        depends_on:
+          - "thermal_api"
 
   thermal_api:
         build: ./src/thermal_api
         environment:
           - SHARED_VAR_HOST=ipc
         depends_on:
-          ipc
+          - "ipc"
 
   temp_reader:
         build: ./src/temp_reader
         environment:
           - SHARED_VAR_HOST=ipc
         depends_on:
-          ipc
+          - "ipc"
 
   temp_contol:
         build: ./src/temp_controller
         environment:
           - SHARED_VAR_HOST=ipc
         depends_on:
-          ipc
+          - "ipc"
