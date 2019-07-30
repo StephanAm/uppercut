@@ -6,7 +6,7 @@ services:
       - "6379:6379"
 
   reverse_proxy:
-        build: ./src/reverse.proxy
+        build: ./src/reverse_proxy
         ports:
             - "5002:80"
 
@@ -17,5 +17,10 @@ services:
 
   temp_reader:
         build: ./src/temp_reader
+        environment:
+          - SHARED_VAR_HOST=ipc
+
+  temp_contol:
+        build: ./src/temp_controller
         environment:
           - SHARED_VAR_HOST=ipc
